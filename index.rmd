@@ -1,0 +1,636 @@
+---
+title: "SIMD 2020 Domain Explorer"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r}
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(DT)
+library(scales)
+
+sf_datazones <- read_sf("Shapefile/cleaned.shp")
+
+theme_set(theme_classic())
+theme_update(panel.grid.major.y = element_line(),
+             panel.grid.major.x = element_line(),
+             plot.title.position = "plot")
+```
+  
+
+Overall SIMD2020
+=====================================
+  
+Column {data-width=600}
+-------------------------------------
+
+### Map
+
+```{r}
+# Palette
+mypalette <- colorFactor(palette = "viridis", domain = sf_datazones$rank_decile, na.color = "transparent")
+
+# Text
+mylabels <- paste(
+  "Datazone: ", sf_datazones$dz_name,"<br/>",
+  "Council Area: ", sf_datazones$la_name,"<br/>",
+  "SIMD Decile: ", sf_datazones$rank_decile,
+  sep = "") %>% 
+  lapply(htmltools::HTML)
+
+# Plot
+m <- leaflet(sf_datazones) %>% 
+  addTiles() %>% 
+  setView( lng = -4.182,
+           lat = 56.817,
+           zoom = 5.5) %>% 
+  addPolygons(
+    fillColor = ~mypalette(rank_decile),
+    weight = .5,
+    opacity = 1,
+    color = "grey",
+    fillOpacity = .5,
+    label = mylabels,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "12px",
+      direction = "auto")) %>% 
+  addLegend(
+    pal = mypalette,
+    values = ~rank_decile,
+    opacity = .7,
+    title = "SIMD 2020\nDecile",
+    position = "bottomright"
+  )
+
+m
+```
+   
+   
+Column {data-width=400}
+-------------------------------------
+
+### Table
+
+```{r}
+sf_datazones %>% 
+  st_drop_geometry() %>% 
+  select(dz_name, la_name, rank_decile) %>%
+  rename("Datazone" = "dz_name",
+         "Council Area" = "la_name",
+         "Overall Decile" = "rank_decile") %>% 
+  DT::datatable(rownames = F, options = list(pageLength = 20))
+```   
+
+
+Income
+=====================================
+  
+Column {data-width=600}
+-------------------------------------
+
+### Map
+
+```{r}
+# Palette
+mypalette <- colorFactor(palette = "viridis", domain = sf_datazones$inc_rank_decile, na.color = "transparent")
+
+# Text
+mylabels <- paste(
+  "Datazone: ", sf_datazones$dz_name,"<br/>",
+  "Council Area: ", sf_datazones$la_name,"<br/>",
+  "Income Decile: ", sf_datazones$inc_rank_decile,
+  sep = "") %>% 
+  lapply(htmltools::HTML)
+
+# Plot
+m <- leaflet(sf_datazones) %>% 
+  addTiles() %>% 
+  setView( lng = -4.182,
+           lat = 56.817,
+           zoom = 5.5) %>% 
+  addPolygons(
+    fillColor = ~mypalette(inc_rank_decile),
+    weight = .5,
+    opacity = 1,
+    color = "grey",
+    fillOpacity = .5,
+    label = mylabels,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "12px",
+      direction = "auto")) %>% 
+  addLegend(
+    pal = mypalette,
+    values = ~rank_decile,
+    opacity = .7,
+    title = "Income Decile",
+    position = "bottomright"
+  )
+
+m
+```
+   
+   
+Column {data-width=400}
+-------------------------------------
+
+### Table
+
+```{r}
+sf_datazones %>% 
+  st_drop_geometry() %>% 
+  select(dz_name, la_name, inc_rank_decile, rank_decile) %>%
+  rename("Datazone" = "dz_name",
+         "Council Area" = "la_name",
+         "Income Decile" = "inc_rank_decile",
+         "Overall Decile" = "rank_decile") %>% 
+  DT::datatable(rownames = F, options = list(pageLength = 10))
+```   
+
+### Rank Comparison
+
+```{r}
+ggplot(data = sf_datazones, aes(x = rank, y = inc_rank)) +
+  geom_point(size = 1.5, alpha = .5, colour = "dodgerblue4") +
+  scale_x_continuous(limits = c(1,7000), breaks = seq(0,7000,by=1000), labels = comma) +
+  scale_y_continuous(limits = c(1,7000), breaks = seq(0,7000,by=1000), labels = comma) +
+  labs(x = "Overall Rank", y = "Income Rank", subtitle = "Areas are ranked from 1 (Most Deprived) to 6,976 (Least Deprived)")
+```
+
+
+
+Employment
+=====================================
+  
+Column {data-width=600}
+-------------------------------------
+
+### Map
+
+```{r}
+# Palette
+mypalette <- colorFactor(palette = "viridis", domain = sf_datazones$emp_rank_decile, na.color = "transparent")
+
+# Text
+mylabels <- paste(
+  "Datazone: ", sf_datazones$dz_name,"<br/>",
+  "Council Area: ", sf_datazones$la_name,"<br/>",
+  "Employment Decile: ", sf_datazones$emp_rank_decile,
+  sep = "") %>% 
+  lapply(htmltools::HTML)
+
+# Plot
+m <- leaflet(sf_datazones) %>% 
+  addTiles() %>% 
+  setView( lng = -4.182,
+           lat = 56.817,
+           zoom = 5.5) %>% 
+  addPolygons(
+    fillColor = ~mypalette(emp_rank_decile),
+    weight = .5,
+    opacity = 1,
+    color = "grey",
+    fillOpacity = .5,
+    label = mylabels,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "12px",
+      direction = "auto")) %>% 
+  addLegend(
+    pal = mypalette,
+    values = ~rank_decile,
+    opacity = .7,
+    title = "Employment Decile",
+    position = "bottomright"
+  )
+
+m
+```
+   
+   
+Column {data-width=400}
+-------------------------------------
+
+### Table
+
+```{r}
+sf_datazones %>% 
+  st_drop_geometry() %>% 
+  select(dz_name, la_name, emp_rank_decile, rank_decile) %>%
+  rename("Datazone" = "dz_name",
+         "Council Area" = "la_name",
+         "Employment Decile" = "emp_rank_decile",
+         "Overall Decile" = "rank_decile") %>% 
+  DT::datatable(rownames = F, options = list(pageLength = 10))
+```   
+
+### Rank Comparison
+
+```{r}
+ggplot(data = sf_datazones, aes(x = rank, y = emp_rank)) +
+  geom_point(size = 1.5, alpha = .5, colour = "dodgerblue4") +
+  scale_x_continuous(limits = c(0,7000), breaks = seq(0,7000,by=1000), labels = comma) +
+  scale_y_continuous(limits = c(0,7000), breaks = seq(0,7000,by=1000), labels = comma) +
+  labs(x = "Overall Rank", y = "Employment Rank", subtitle = "Areas are ranked from 1 (Most Deprived) to 6,976 (Least Deprived)")
+
+```
+
+
+
+Health
+=====================================
+  
+Column {data-width=600}
+-------------------------------------
+
+### Map
+
+```{r}
+# Palette
+mypalette <- colorFactor(palette = "viridis", domain = sf_datazones$hlth_rank_decile, na.color = "transparent")
+
+# Text
+mylabels <- paste(
+  "Datazone: ", sf_datazones$dz_name,"<br/>",
+  "Council Area: ", sf_datazones$la_name,"<br/>",
+  "Health Decile: ", sf_datazones$hlth_rank_decile,
+  sep = "") %>% 
+  lapply(htmltools::HTML)
+
+# Plot
+m <- leaflet(sf_datazones) %>% 
+  addTiles() %>% 
+  setView( lng = -4.182,
+           lat = 56.817,
+           zoom = 5.5) %>% 
+  addPolygons(
+    fillColor = ~mypalette(hlth_rank_decile),
+    weight = .5,
+    opacity = 1,
+    color = "grey",
+    fillOpacity = .5,
+    label = mylabels,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "12px",
+      direction = "auto")) %>% 
+  addLegend(
+    pal = mypalette,
+    values = ~rank_decile,
+    opacity = .7,
+    title = "Health Decile",
+    position = "bottomright"
+  )
+
+m
+```
+   
+   
+Column {data-width=400}
+-------------------------------------
+
+### Table
+
+```{r}
+sf_datazones %>% 
+  st_drop_geometry() %>% 
+  select(dz_name, la_name, hlth_rank_decile, rank_decile) %>%
+  rename("Datazone" = "dz_name",
+         "Council Area" = "la_name",
+         "Health Decile" = "hlth_rank_decile",
+         "Overall Decile" = "rank_decile") %>% 
+  DT::datatable(rownames = F, options = list(pageLength = 10))
+```   
+
+### Rank Comparison
+
+```{r}
+ggplot(data = sf_datazones, aes(x = rank, y = hlth_rank)) +
+  geom_point(size = 1.5, alpha = .5, colour = "dodgerblue4") +
+  scale_x_continuous(limits = c(0,7000), breaks = seq(0,7000,by=1000), labels = comma) +
+  scale_y_continuous(limits = c(0,7000), breaks = seq(0,7000,by=1000), labels = comma) +
+  labs(x = "Overall Rank", y = "Health Rank", subtitle = "Areas are ranked from 1 (Most Deprived) to 6,976 (Least Deprived)")
+```
+
+
+
+Education
+=====================================
+  
+Column {data-width=600}
+-------------------------------------
+
+### Map
+
+```{r}
+# Palette
+mypalette <- colorFactor(palette = "viridis", domain = sf_datazones$edu_rank_decile, na.color = "transparent")
+
+# Text
+mylabels <- paste(
+  "Datazone: ", sf_datazones$dz_name,"<br/>",
+  "Council Area: ", sf_datazones$la_name,"<br/>",
+  "Education Decile: ", sf_datazones$edu_rank_decile,
+  sep = "") %>% 
+  lapply(htmltools::HTML)
+
+# Plot
+m <- leaflet(sf_datazones) %>% 
+  addTiles() %>% 
+  setView( lng = -4.182,
+           lat = 56.817,
+           zoom = 5.5) %>% 
+  addPolygons(
+    fillColor = ~mypalette(edu_rank_decile),
+    weight = .5,
+    opacity = 1,
+    color = "grey",
+    fillOpacity = .5,
+    label = mylabels,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "12px",
+      direction = "auto")) %>% 
+  addLegend(
+    pal = mypalette,
+    values = ~rank_decile,
+    opacity = .7,
+    title = "Education Decile",
+    position = "bottomright"
+  )
+
+m
+```
+   
+   
+Column {data-width=400}
+-------------------------------------
+
+### Table
+
+```{r}
+sf_datazones %>% 
+  st_drop_geometry() %>% 
+  select(dz_name, la_name, edu_rank_decile, rank_decile) %>%
+  rename("Datazone" = "dz_name",
+         "Council Area" = "la_name",
+         "Income Decile" = "edu_rank_decile",
+         "Overall Decile" = "rank_decile") %>% 
+  DT::datatable(rownames = F, options = list(pageLength = 10))
+```   
+
+### Rank Comparison
+
+```{r}
+ggplot(data = sf_datazones, aes(x = rank, y = edu_rank)) +
+  geom_point(size = 1.5, alpha = .5, colour = "dodgerblue4") +
+  scale_x_continuous(limits = c(0,7000), breaks = seq(0,7000,by=1000), labels = comma) +
+  scale_y_continuous(limits = c(0,7000), breaks = seq(0,7000,by=1000), labels = comma) +
+  labs(x = "Overall Rank", y = "Education Rank", subtitle = "Areas are ranked from 1 (Most Deprived) to 6,976 (Least Deprived)")
+```
+
+
+
+Geographic Access
+=====================================
+  
+Column {data-width=600}
+-------------------------------------
+
+### Map
+
+```{r}
+# Palette
+mypalette <- colorFactor(palette = "viridis", domain = sf_datazones$g_acc_rank_decile, na.color = "transparent")
+
+# Text
+mylabels <- paste(
+  "Datazone: ", sf_datazones$dz_name,"<br/>",
+  "Council Area: ", sf_datazones$la_name,"<br/>",
+  "Access Decile: ", sf_datazones$g_acc_rank_decile,
+  sep = "") %>% 
+  lapply(htmltools::HTML)
+
+# Plot
+m <- leaflet(sf_datazones) %>% 
+  addTiles() %>% 
+  setView( lng = -4.182,
+           lat = 56.817,
+           zoom = 5.5) %>% 
+  addPolygons(
+    fillColor = ~mypalette(g_acc_rank_decile),
+    weight = .5,
+    opacity = 1,
+    color = "grey",
+    fillOpacity = .5,
+    label = mylabels,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "12px",
+      direction = "auto")) %>% 
+  addLegend(
+    pal = mypalette,
+    values = ~rank_decile,
+    opacity = .7,
+    title = "Access Decile",
+    position = "bottomright"
+  )
+
+m
+```
+   
+   
+Column {data-width=400}
+-------------------------------------
+
+### Table
+
+```{r}
+sf_datazones %>% 
+  st_drop_geometry() %>% 
+  select(dz_name, la_name, g_acc_rank_decile, rank_decile) %>%
+  rename("Datazone" = "dz_name",
+         "Council Area" = "la_name",
+         "Access Decile" = "g_acc_rank_decile",
+         "Overall Decile" = "rank_decile") %>% 
+  DT::datatable(rownames = F, options = list(pageLength = 10))
+```   
+
+### Rank Comparison
+
+```{r}
+ggplot(data = sf_datazones, aes(x = rank, y = g_acc_rank)) +
+  geom_point(size = 1.5, alpha = .5, colour = "dodgerblue4") +
+  scale_x_continuous(limits = c(0,7000), breaks = seq(0,7000,by=1000), labels = comma) +
+  scale_y_continuous(limits = c(0,7000), breaks = seq(0,7000,by=1000), labels = comma) +
+  labs(x = "Overall Rank", y = "Geographic Access Rank", subtitle = "Areas are ranked from 1 (Most Deprived) to 6,976 (Least Deprived)")
+```
+
+
+
+Crime
+=====================================
+  
+Column {data-width=600}
+-------------------------------------
+
+### Map
+
+```{r}
+# Palette
+mypalette <- colorFactor(palette = "viridis", domain = sf_datazones$crime_rank_decile, na.color = "transparent")
+
+# Text
+mylabels <- paste(
+  "Datazone: ", sf_datazones$dz_name,"<br/>",
+  "Council Area: ", sf_datazones$la_name,"<br/>",
+  "Crime Decile: ", sf_datazones$crime_rank_decile,
+  sep = "") %>% 
+  lapply(htmltools::HTML)
+
+# Plot
+m <- leaflet(sf_datazones) %>% 
+  addTiles() %>% 
+  setView( lng = -4.182,
+           lat = 56.817,
+           zoom = 5.5) %>% 
+  addPolygons(
+    fillColor = ~mypalette(crime_rank_decile),
+    weight = .5,
+    opacity = 1,
+    color = "grey",
+    fillOpacity = .5,
+    label = mylabels,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "12px",
+      direction = "auto")) %>% 
+  addLegend(
+    pal = mypalette,
+    values = ~rank_decile,
+    opacity = .7,
+    title = "Crime Decile",
+    position = "bottomright"
+  )
+
+m
+```
+   
+   
+Column {data-width=400}
+-------------------------------------
+
+### Table
+
+```{r}
+sf_datazones %>% 
+  st_drop_geometry() %>% 
+  select(dz_name, la_name, crime_rank_decile, rank_decile) %>%
+  rename("Datazone" = "dz_name",
+         "Council Area" = "la_name",
+         "Crime Decile" = "crime_rank_decile",
+         "Overall Decile" = "rank_decile") %>% 
+  DT::datatable(rownames = F, options = list(pageLength = 10))
+```   
+
+### Rank Comparison
+
+```{r}
+ggplot(data = sf_datazones, aes(x = rank, y = crime_rank)) +
+  geom_point(size = 1.5, alpha = .5, colour = "dodgerblue4") +
+  scale_x_continuous(limits = c(0,7000), breaks = seq(0,7000,by=1000), labels = comma) +
+  scale_y_continuous(limits = c(0,7000), breaks = seq(0,7000,by=1000), labels = comma) +
+  labs(x = "Overall Rank", y = "Crime Rank", subtitle = "Areas are ranked from 1 (Most Deprived) to 6,976 (Least Deprived)")
+```
+
+
+
+Housing
+=====================================
+  
+Column {data-width=600}
+-------------------------------------
+
+### Map
+
+```{r}
+# Palette
+mypalette <- colorFactor(palette = "viridis", domain = sf_datazones$house_rank_decile, na.color = "transparent")
+
+# Text
+mylabels <- paste(
+  "Datazone: ", sf_datazones$dz_name,"<br/>",
+  "Council Area: ", sf_datazones$la_name,"<br/>",
+  "Housing Decile: ", sf_datazones$house_rank_decile,
+  sep = "") %>% 
+  lapply(htmltools::HTML)
+
+# Plot
+m <- leaflet(sf_datazones) %>% 
+  addTiles() %>% 
+  setView( lng = -4.182,
+           lat = 56.817,
+           zoom = 5.5) %>% 
+  addPolygons(
+    fillColor = ~mypalette(house_rank_decile),
+    weight = .5,
+    opacity = 1,
+    color = "grey",
+    fillOpacity = .5,
+    label = mylabels,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "12px",
+      direction = "auto")) %>% 
+  addLegend(
+    pal = mypalette,
+    values = ~rank_decile,
+    opacity = .7,
+    title = "Housing Decile",
+    position = "bottomright"
+  )
+
+m
+```
+   
+   
+Column {data-width=400}
+-------------------------------------
+
+### Table
+
+```{r}
+sf_datazones %>% 
+  st_drop_geometry() %>% 
+  select(dz_name, la_name, house_rank_decile, rank_decile) %>%
+  rename("Datazone" = "dz_name",
+         "Council Area" = "la_name",
+         "Housing Decile" = "house_rank_decile",
+         "Overall Decile" = "rank_decile") %>% 
+  DT::datatable(rownames = F, options = list(pageLength = 10))
+```   
+
+### Rank Comparison
+
+```{r}
+ggplot(data = sf_datazones, aes(x = rank, y = house_rank)) +
+  geom_point(size = 1.5, alpha = .5, colour = "dodgerblue4") +
+  scale_x_continuous(limits = c(0,7000), breaks = seq(0,7000,by=1000), labels = comma) +
+  scale_y_continuous(limits = c(0,7000), breaks = seq(0,7000,by=1000), labels = comma) +
+  labs(x = "Overall Rank", y = "Housing Rank", subtitle = "Areas are ranked from 1 (Most Deprived) to 6,976 (Least Deprived)")
+```
+
+
+Data
+=====================================
+
+### Data
+
+Information on the Scottish Index of Multiple Deprivation 2020 (v2) is available here: https://www.gov.scot/collections/scottish-index-of-multiple-deprivation-2020/
+
+SIMD2020 Shapefiles are available here: https://data.gov.uk/dataset/1102bf85-ed49-440a-b211-da87e8d752eb/scottish-index-of-multiple-deprivation-simd-2020
