@@ -4,6 +4,8 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+    social: menu
+    source_code: embed
 ---
 
 ```{r}
@@ -47,7 +49,7 @@ m <- leaflet(sf_datazones) %>%
   addTiles() %>% 
   setView( lng = -4.182,
            lat = 56.817,
-           zoom = 5.5) %>% 
+           zoom = 7) %>% 
   addPolygons(
     fillColor = ~mypalette(rank_decile),
     weight = .5,
@@ -69,7 +71,6 @@ m <- leaflet(sf_datazones) %>%
 
 m
 ```
-   
    
 Column {data-width=400}
 -------------------------------------
@@ -112,7 +113,7 @@ m <- leaflet(sf_datazones) %>%
   addTiles() %>% 
   setView( lng = -4.182,
            lat = 56.817,
-           zoom = 5.5) %>% 
+           zoom = 7) %>% 
   addPolygons(
     fillColor = ~mypalette(inc_rank_decile),
     weight = .5,
@@ -134,7 +135,6 @@ m <- leaflet(sf_datazones) %>%
 
 m
 ```
-   
    
 Column {data-width=400}
 -------------------------------------
@@ -163,7 +163,6 @@ ggplot(data = sf_datazones, aes(x = rank, y = inc_rank)) +
 ```
 
 
-
 Employment
 =====================================
   
@@ -189,7 +188,7 @@ m <- leaflet(sf_datazones) %>%
   addTiles() %>% 
   setView( lng = -4.182,
            lat = 56.817,
-           zoom = 5.5) %>% 
+           zoom = 7) %>% 
   addPolygons(
     fillColor = ~mypalette(emp_rank_decile),
     weight = .5,
@@ -211,7 +210,6 @@ m <- leaflet(sf_datazones) %>%
 
 m
 ```
-   
    
 Column {data-width=400}
 -------------------------------------
@@ -241,7 +239,6 @@ ggplot(data = sf_datazones, aes(x = rank, y = emp_rank)) +
 ```
 
 
-
 Health
 =====================================
   
@@ -267,7 +264,7 @@ m <- leaflet(sf_datazones) %>%
   addTiles() %>% 
   setView( lng = -4.182,
            lat = 56.817,
-           zoom = 5.5) %>% 
+           zoom = 7) %>% 
   addPolygons(
     fillColor = ~mypalette(hlth_rank_decile),
     weight = .5,
@@ -289,7 +286,6 @@ m <- leaflet(sf_datazones) %>%
 
 m
 ```
-   
    
 Column {data-width=400}
 -------------------------------------
@@ -318,7 +314,6 @@ ggplot(data = sf_datazones, aes(x = rank, y = hlth_rank)) +
 ```
 
 
-
 Education
 =====================================
   
@@ -344,7 +339,7 @@ m <- leaflet(sf_datazones) %>%
   addTiles() %>% 
   setView( lng = -4.182,
            lat = 56.817,
-           zoom = 5.5) %>% 
+           zoom = 7) %>% 
   addPolygons(
     fillColor = ~mypalette(edu_rank_decile),
     weight = .5,
@@ -366,7 +361,6 @@ m <- leaflet(sf_datazones) %>%
 
 m
 ```
-   
    
 Column {data-width=400}
 -------------------------------------
@@ -395,7 +389,6 @@ ggplot(data = sf_datazones, aes(x = rank, y = edu_rank)) +
 ```
 
 
-
 Geographic Access
 =====================================
   
@@ -421,7 +414,7 @@ m <- leaflet(sf_datazones) %>%
   addTiles() %>% 
   setView( lng = -4.182,
            lat = 56.817,
-           zoom = 5.5) %>% 
+           zoom = 7) %>% 
   addPolygons(
     fillColor = ~mypalette(g_acc_rank_decile),
     weight = .5,
@@ -443,7 +436,6 @@ m <- leaflet(sf_datazones) %>%
 
 m
 ```
-   
    
 Column {data-width=400}
 -------------------------------------
@@ -472,7 +464,6 @@ ggplot(data = sf_datazones, aes(x = rank, y = g_acc_rank)) +
 ```
 
 
-
 Crime
 =====================================
   
@@ -498,7 +489,7 @@ m <- leaflet(sf_datazones) %>%
   addTiles() %>% 
   setView( lng = -4.182,
            lat = 56.817,
-           zoom = 5.5) %>% 
+           zoom = 7) %>% 
   addPolygons(
     fillColor = ~mypalette(crime_rank_decile),
     weight = .5,
@@ -520,7 +511,6 @@ m <- leaflet(sf_datazones) %>%
 
 m
 ```
-   
    
 Column {data-width=400}
 -------------------------------------
@@ -549,7 +539,6 @@ ggplot(data = sf_datazones, aes(x = rank, y = crime_rank)) +
 ```
 
 
-
 Housing
 =====================================
   
@@ -575,7 +564,7 @@ m <- leaflet(sf_datazones) %>%
   addTiles() %>% 
   setView( lng = -4.182,
            lat = 56.817,
-           zoom = 5.5) %>% 
+           zoom = 7) %>% 
   addPolygons(
     fillColor = ~mypalette(house_rank_decile),
     weight = .5,
@@ -597,7 +586,6 @@ m <- leaflet(sf_datazones) %>%
 
 m
 ```
-   
    
 Column {data-width=400}
 -------------------------------------
@@ -631,6 +619,11 @@ Data
 
 ### Data
 
+
 Information on the Scottish Index of Multiple Deprivation 2020 (v2) is available here: https://www.gov.scot/collections/scottish-index-of-multiple-deprivation-2020/
 
+
 SIMD2020 Shapefiles are available here: https://data.gov.uk/dataset/1102bf85-ed49-440a-b211-da87e8d752eb/scottish-index-of-multiple-deprivation-simd-2020
+
+
+You can find the files used to create this site here: https://github.com/will-ball/simd_domain_explorer
