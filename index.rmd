@@ -6,6 +6,10 @@ output:
     vertical_layout: fill
     social: menu
     source_code: embed
+    self_contained: false
+    theme:
+      version: 4
+      bootswatch: journal
 ---
 
 ```{r}
@@ -27,7 +31,7 @@ theme_update(panel.grid.major.y = element_line(),
 Overall SIMD2020
 =====================================
   
-Column {data-width=600}
+Column 
 -------------------------------------
 
 ### Map
@@ -74,18 +78,6 @@ m
    
 Column {data-width=400}
 -------------------------------------
-
-### Table
-
-```{r}
-sf_datazones %>% 
-  st_drop_geometry() %>% 
-  select(dz_name, la_name, rank_decile) %>%
-  rename("Datazone" = "dz_name",
-         "Council Area" = "la_name",
-         "Overall Decile" = "rank_decile") %>% 
-  DT::datatable(rownames = F, options = list(pageLength = 20))
-```   
 
 
 Income
@@ -138,19 +130,6 @@ m
    
 Column {data-width=400}
 -------------------------------------
-
-### Table
-
-```{r}
-sf_datazones %>% 
-  st_drop_geometry() %>% 
-  select(dz_name, la_name, inc_rank_decile, rank_decile) %>%
-  rename("Datazone" = "dz_name",
-         "Council Area" = "la_name",
-         "Income Decile" = "inc_rank_decile",
-         "Overall Decile" = "rank_decile") %>% 
-  DT::datatable(rownames = F, options = list(pageLength = 10))
-```   
 
 ### Rank Comparison
 
@@ -213,19 +192,6 @@ m
    
 Column {data-width=400}
 -------------------------------------
-
-### Table
-
-```{r}
-sf_datazones %>% 
-  st_drop_geometry() %>% 
-  select(dz_name, la_name, emp_rank_decile, rank_decile) %>%
-  rename("Datazone" = "dz_name",
-         "Council Area" = "la_name",
-         "Employment Decile" = "emp_rank_decile",
-         "Overall Decile" = "rank_decile") %>% 
-  DT::datatable(rownames = F, options = list(pageLength = 10))
-```   
 
 ### Rank Comparison
 
@@ -290,19 +256,6 @@ m
 Column {data-width=400}
 -------------------------------------
 
-### Table
-
-```{r}
-sf_datazones %>% 
-  st_drop_geometry() %>% 
-  select(dz_name, la_name, hlth_rank_decile, rank_decile) %>%
-  rename("Datazone" = "dz_name",
-         "Council Area" = "la_name",
-         "Health Decile" = "hlth_rank_decile",
-         "Overall Decile" = "rank_decile") %>% 
-  DT::datatable(rownames = F, options = list(pageLength = 10))
-```   
-
 ### Rank Comparison
 
 ```{r}
@@ -364,19 +317,6 @@ m
    
 Column {data-width=400}
 -------------------------------------
-
-### Table
-
-```{r}
-sf_datazones %>% 
-  st_drop_geometry() %>% 
-  select(dz_name, la_name, edu_rank_decile, rank_decile) %>%
-  rename("Datazone" = "dz_name",
-         "Council Area" = "la_name",
-         "Income Decile" = "edu_rank_decile",
-         "Overall Decile" = "rank_decile") %>% 
-  DT::datatable(rownames = F, options = list(pageLength = 10))
-```   
 
 ### Rank Comparison
 
@@ -440,19 +380,6 @@ m
 Column {data-width=400}
 -------------------------------------
 
-### Table
-
-```{r}
-sf_datazones %>% 
-  st_drop_geometry() %>% 
-  select(dz_name, la_name, g_acc_rank_decile, rank_decile) %>%
-  rename("Datazone" = "dz_name",
-         "Council Area" = "la_name",
-         "Access Decile" = "g_acc_rank_decile",
-         "Overall Decile" = "rank_decile") %>% 
-  DT::datatable(rownames = F, options = list(pageLength = 10))
-```   
-
 ### Rank Comparison
 
 ```{r}
@@ -514,19 +441,6 @@ m
    
 Column {data-width=400}
 -------------------------------------
-
-### Table
-
-```{r}
-sf_datazones %>% 
-  st_drop_geometry() %>% 
-  select(dz_name, la_name, crime_rank_decile, rank_decile) %>%
-  rename("Datazone" = "dz_name",
-         "Council Area" = "la_name",
-         "Crime Decile" = "crime_rank_decile",
-         "Overall Decile" = "rank_decile") %>% 
-  DT::datatable(rownames = F, options = list(pageLength = 10))
-```   
 
 ### Rank Comparison
 
@@ -590,19 +504,6 @@ m
 Column {data-width=400}
 -------------------------------------
 
-### Table
-
-```{r}
-sf_datazones %>% 
-  st_drop_geometry() %>% 
-  select(dz_name, la_name, house_rank_decile, rank_decile) %>%
-  rename("Datazone" = "dz_name",
-         "Council Area" = "la_name",
-         "Housing Decile" = "house_rank_decile",
-         "Overall Decile" = "rank_decile") %>% 
-  DT::datatable(rownames = F, options = list(pageLength = 10))
-```   
-
 ### Rank Comparison
 
 ```{r}
@@ -617,13 +518,32 @@ ggplot(data = sf_datazones, aes(x = rank, y = house_rank)) +
 Data
 =====================================
 
-### Data
+Column
+-------------------------------------
 
+### Data {data-height=900}
+
+```{r}
+sf_datazones %>% 
+  st_drop_geometry() %>% 
+  select(dz_name, la_name, rank_decile, inc_rank_decile, emp_rank_decile, hlth_rank_decile, edu_rank_decile, g_acc_rank_decile, crime_rank_decile, house_rank_decile) %>%
+  rename("Datazone" = "dz_name",
+         "Council Area" = "la_name",
+         "Income Decile" = "inc_rank_decile",
+         "Employment Decile" = "emp_rank_decile",
+         "Health Decile" = "hlth_rank_decile",
+         "Education Decile" = "edu_rank_decile",
+         "Access Decile" = "g_acc_rank_decile",
+         "Crime Decile" = "crime_rank_decile",
+         "Housing Decile" = "house_rank_decile",
+         "Overall Decile" = "rank_decile") %>% 
+  DT::datatable(rownames = F, options = list(pageLength = 100))
+```   
+
+### Sources
 
 Information on the Scottish Index of Multiple Deprivation 2020 (v2) is available here: https://www.gov.scot/collections/scottish-index-of-multiple-deprivation-2020/
 
-
 SIMD2020 Shapefiles are available here: https://data.gov.uk/dataset/1102bf85-ed49-440a-b211-da87e8d752eb/scottish-index-of-multiple-deprivation-simd-2020
-
 
 You can find the files used to create this site here: https://github.com/will-ball/simd_domain_explorer
